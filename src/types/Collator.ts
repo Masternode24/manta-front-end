@@ -7,6 +7,7 @@ import AssetType from './AssetType';
 import Balance from './Balance';
 
 const ADDRESS_TO_COLLATOR_NAME_MAP = {
+  dmvPeJ8vK8TDkDHZUbcgd1ceGWDd5PDhzb4tnAho3FBBV3xXX: 'Masternode24.de',
   dmxa3MJczFGT92BUQjwsxguUC2t5qFaDdagfpBQWdGkNPJYQ5: 'Anonstake',
   dmwJT8yMLRzTPcNspYMvY6Cmjk7Nh6SNqsS99ykxyWF6MRpuK: 'PlusReward',
   dmup6erAb8iJHQ2UXyHkA1G6m1hnSLRM55PdSD7DDbN1Ww4ZN: 'Validatrium',
