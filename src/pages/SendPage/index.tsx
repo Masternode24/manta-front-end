@@ -1,35 +1,18 @@
 // @ts-nocheck
-import NETWORK from 'constants/NetworkConstants';
 import React from 'react';
-import { TxStatusContextProvider } from 'contexts/txStatusContext';
-import { PrivateWalletContextProvider } from 'contexts/privateWalletContext';
-import { SubstrateContextProvider } from 'contexts/substrateContext';
-import { DolphinNavbar } from 'components/Navbar';
-import { ExternalAccountContextProvider } from 'contexts/externalAccountContext';
-import DeveloperConsole from 'components/Developer/DeveloperConsole';
-import { ConfigContextProvider } from 'contexts/configContext';
+import PageContent from 'components/PageContent';
+import Navbar from 'components/Navbar';
 import { SendContextProvider } from './SendContext';
-import SendPageContent from './SendPageContent';
+import SendForm from './SendForm';
 
 const SendPage = () => {
   return (
-    <ConfigContextProvider network={NETWORK.DOLPHIN}>
-      <SubstrateContextProvider>
-        <ExternalAccountContextProvider>
-          <TxStatusContextProvider >
-            <PrivateWalletContextProvider>
-              <SendContextProvider>
-                <div className="min-h-screen">
-                  <DolphinNavbar />
-                  <SendPageContent />
-                </div>
-                <DeveloperConsole />
-              </SendContextProvider>
-            </PrivateWalletContextProvider>
-          </TxStatusContextProvider>
-        </ExternalAccountContextProvider>
-      </SubstrateContextProvider>
-    </ConfigContextProvider>
+    <SendContextProvider>
+      <Navbar />
+      <PageContent>
+        <SendForm />
+      </PageContent>
+    </SendContextProvider>
   );
 };
 

@@ -1,5 +1,5 @@
 .sortable-table-wrapper {
-  max-width: 1290px;
+  max-width: 1280px;
 }
 
 .border-5 {
@@ -7,12 +7,12 @@
 }
 
 .gradient-border {
-  background: linear-gradient(var(--color-bg-secondary) 0 0) padding-box,
+  background: linear-gradient(var(--color-bg-fifth) 0 0) padding-box,
     /*this is your grey background*/ $blue-primary-bgcolor border-box;
   border: 3px solid transparent;
 
   &.error {
-    background: linear-gradient(var(--color-bg-secondary) 0 0) padding-box,
+    background: linear-gradient(var(--color-bg-fifth) 0 0) padding-box,
       $error-primary-bgcolor border-box;
   }
 }
@@ -34,7 +34,7 @@
 }
 
 .dark .manta-bg-gray {
-  background-color: #151422;
+  background-color: #050D32;
 }
 
 .manta-bg-light-gray {
@@ -126,7 +126,7 @@ input {
       &:-webkit-autofill:hover,
       &:-webkit-autofill:focus,
       &:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 1000px $gray-primary-color inset !important;
+        -webkit-box-shadow: 0 0 0 1000px #050D32 inset !important;
         -webkit-background-clip: text;
       }
     }

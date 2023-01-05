@@ -11,7 +11,7 @@ export default function DeveloperConsole() {
   const config = useConfig();
 
   if (!config.DEV_CONSOLE) {
-    return;
+    return null;
   }
 
   useEffect(() => {

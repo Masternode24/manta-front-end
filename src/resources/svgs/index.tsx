@@ -24,6 +24,7 @@ import AngelListSvg from './AngelListSvg';
 import NewsletterSvg from './NewsletterSvg';
 import DiscordSvg from './DiscordSvg';
 import HeartSvg from './HeartSvg';
+import UpDownArrowSvg from './UpDownArrowSvg';
 
 export {
   PoolSvg,
@@ -50,5 +51,6 @@ export {
   AngelListSvg,
   NewsletterSvg,
   DiscordSvg,
-  HeartSvg
+  HeartSvg,
+  UpDownArrowSvg
 };

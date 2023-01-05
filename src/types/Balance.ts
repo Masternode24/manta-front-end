@@ -2,6 +2,7 @@
 import Decimal from 'decimal.js';
 import BN from 'bn.js';
 import AssetType from './AssetType';
+import Usd from './Usd';
 
 export default class Balance {
   constructor(assetType, valueAtomicUnits) {
@@ -47,31 +48,27 @@ export default class Balance {
     return valueBaseUnits;
   }
 
-  toString(shouldFormat, decimals = 3) {
-    return !shouldFormat
-      ? this.valueBaseUnits().toDecimalPlaces(decimals, Decimal.ROUND_DOWN).toString()
-      : `${this.valueBaseUnits()
-        .toDecimalPlaces(decimals, Decimal.ROUND_DOWN)
-        .toNumber()
-        .toLocaleString(undefined, {
-          maximumFractionDigits: decimals,
-          minimumFractionDigits: 0,
-        })} ${this.assetType.ticker}`;
+  toString(decimals = 3) {
+    return this.valueBaseUnits().toDecimalPlaces(decimals, Decimal.ROUND_DOWN).toString();
   }
 
-  toUsd(usdPerToken) {
-    return this.valueBaseUnits().mul(usdPerToken);
-  }
-
-  toUsdString(usdPerToken) {
-    const valueUsd = this.toUsd(usdPerToken);
-    return `$${valueUsd
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+  toDisplayString(decimals = 3, roundDown = true) {
+    const rounding = roundDown ? Decimal.ROUND_DOWN : Decimal.ROUND_UP;
+    return `${this.valueBaseUnits()
+      .toDecimalPlaces(decimals, rounding)
       .toNumber()
       .toLocaleString(undefined, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      })}`;
+        maximumFractionDigits: decimals,
+        minimumFractionDigits: 0,
+      })} ${this.assetType.ticker}`;
+  }
+
+  toFeeDisplayString() {
+    return this.toDisplayString(6, false);
+  }
+
+  toUsd(usdPerToken: Usd) {
+    return new Usd(this.valueBaseUnits().mul(usdPerToken.value));
   }
 
   eq(other) {

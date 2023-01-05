@@ -9,7 +9,8 @@ export const showError = (msg) => {
     title: 'Error',
     message: <NotificationContent msg={msg} />,
     duration: 15000,
-    pauseOnHover: true
+    pauseOnHover: true,
+    offset: 70
   });
 };
 
@@ -19,17 +20,21 @@ export const showWarning = (msg) => {
     message: <NotificationContent msg={msg} />,
     type: 'warning',
     duration: 15000,
-    pauseOnHover: true
+    pauseOnHover: true,
+    offset: 70
   });
 };
 
-export const showSuccess = (config, msg, extrinsic = '') => {
+export const showSuccess = (subscanBaseUrl, msg, extrinsic = '') => {
   Notification({
     title: 'Success',
-    message: <TxSuccessNotificationContent config={config} msg={msg} extrinsic={extrinsic} />,
+    message: <TxSuccessNotificationContent
+        subscanBaseUrl={subscanBaseUrl} msg={msg} extrinsic={extrinsic}
+      />,
     type: 'success',
     duration: 15000,
-    pauseOnHover: true
+    pauseOnHover: true,
+    offset: 70
   });
 };
 
@@ -38,6 +43,7 @@ export const showInfo = (msg) => {
     title: 'Info',
     message: <NotificationContent msg={msg} />,
     duration: 7500,
-    pauseOnHover: true
+    pauseOnHover: true,
+    offset: 70
   });
 };

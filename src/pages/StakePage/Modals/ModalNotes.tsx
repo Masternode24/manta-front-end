@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const ModalNotes = ({notes}) => {
   return (
     <div className="mt-6">
-      <h1 className="text-xl font-semibold text-black dark:text-white">
+      <h1 className="text-xl font-semibold text-white">
       Note
       </h1>
       <ul className="list-disc text-secondary space-y-2 pt-2 ml-3">

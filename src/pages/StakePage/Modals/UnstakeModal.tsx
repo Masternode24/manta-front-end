@@ -44,14 +44,14 @@ export const UnstakeModal = ({ hideModal }) => {
   const [warningMessage, setWarningMessage] = useState(null);
 
   const delegationAmountText = selectedCollatorDelegation
-    ? `Staked: ${selectedCollatorDelegation.delegatedBalance.toString(true, 0)}`
+    ? `Staked: ${selectedCollatorDelegation.delegatedBalance.toDisplayString(0)}`
     : 'Staked: 0 KMA';
 
-  const minimumStakeAmountString = selectedCollator.minStake.toString(true, 0);
+  const minimumStakeAmountString = selectedCollator.minStake.toDisplayString(0);
   const minimumStakeText = ` Minimum stake: ${minimumStakeAmountString}`;
 
   const usdValueText = (unstakeTargetBalance && usdPerKma)
-    ? unstakeTargetBalance.toUsdString(usdPerKma)
+    ? unstakeTargetBalance.toUsd(usdPerKma).toString()
     : '';
 
   const notes = [
@@ -125,12 +125,12 @@ export const UnstakeModal = ({ hideModal }) => {
 
   const onClickMax = async () => {
     const maxUnstakeableBalance =
-      selectedCollatorDelegation.delegatedBalance.toString(false);
+      selectedCollatorDelegation.delegatedBalance.toString();
     onChangeUnstakeAmountInput(maxUnstakeableBalance);
   };
 
   return (
-    <div className="w-96 py-4 bg-secondary rounded-2xl">
+    <div className="w-96 py-4 bg-fifth rounded-2xl">
       <div className="flex items-center gap-2">
         <h1 className="font-semibold text-secondary text-lg">
           {selectedCollator.name}
@@ -154,7 +154,7 @@ export const UnstakeModal = ({ hideModal }) => {
             alt="Calamari(KMA)"
           />
           <input
-            className="bg-secondary pl-1 flex-grow h-10 outline-none dark:text-white"
+            className="bg-fifth pl-1 flex-grow h-10 outline-none dark:text-white"
             placeholder="Amount"
             onChange={(e) => onChangeUnstakeAmountInput(e.target.value)}
             value={inputValue}

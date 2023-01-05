@@ -26,6 +26,6 @@ export default class Version {
   }
 
   toString() {
-    return `v${this.majorVersion}.${this.minorVersion}.${this.patchVersion}`;
+    return `${this.majorVersion}.${this.minorVersion}.${this.patchVersion}`;
   }
 }

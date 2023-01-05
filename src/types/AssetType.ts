@@ -1,6 +1,20 @@
 // @ts-nocheck
+import NETWORK from 'constants/NetworkConstants';
 import Svgs from 'resources/icons';
 import BN from 'bn.js';
+
+const AssetIds = {
+  DOL: 1,
+  KAR: 8,
+  AUSD: 9,
+  LKSM: 10,
+  MOVR: 11,
+  KSM: 12
+};
+
+const getAssetIds = (config) => {
+  return AssetIds;
+};
 
 export default class AssetType {
   constructor(
@@ -11,11 +25,14 @@ export default class AssetType {
     numberOfDecimals,
     publicExistentialDeposit,
     isPrivate,
-    isNativeToken = false
+    coingeckoId,
+    isNativeToken = false,
+    logicalTicker = null
   ) {
     this.assetId = assetId;
     this.baseName = baseName;
     this.baseTicker = baseTicker;
+    this.logicalTicker = logicalTicker || baseTicker;
     this.name = AssetType._getFullName(baseName, isPrivate);
     this.ticker = AssetType._getFullTicker(baseTicker, isPrivate);
     this.icon = icon;
@@ -24,132 +41,134 @@ export default class AssetType {
     this.existentialDeposit = isPrivate ? new BN(0) : publicExistentialDeposit;
     this.isPrivate = isPrivate;
     this.isNativeToken = isNativeToken;
+    this.coingeckoId = coingeckoId;
   }
 
   static Native(config) {
     if (config.NETWORK_NAME === 'Calamari') {
-      return AssetType.Calamari(false);
+      return AssetType.Calamari(config, false);
     } else {
-      return AssetType.Dolphin(false);
+      return AssetType.DolphinSkinnedCalamari(config, false);
     }
   }
 
-  static Dolphin(isPrivate) {
+  static DolphinSkinnedCalamari(config, isPrivate) {
     return new AssetType(
-      1,
+      getAssetIds(config).DOL,
       'Dolphin',
       'DOL',
       Svgs.Dolphin,
-      18,
-      new BN('100000000000000000'),
+      12,
+      new BN('100000000000'),
       isPrivate,
-      true
+      'dolphin',
+      true,
+      'KMA'
     );
   }
 
-  static Calamari(isPrivate) {
+  static Calamari(config, isPrivate) {
     return new AssetType(
-      1,
+      getAssetIds(config).KMA,
       'Calamari',
       'KMA',
       Svgs.Calamari,
       12,
       new BN('100000000000'),
       isPrivate,
+      'calamari-network',
       true
     );
   }
 
-  static Karura(isPrivate) {
+  static Karura(config, isPrivate) {
     return new AssetType(
-      8,
+      getAssetIds(config).KAR,
       'Karura',
       'KAR',
       Svgs.KarIcon,
       12,
       new BN('100000000000'),
-      isPrivate
+      isPrivate,
+      'karura'
     );
   }
-
-  static AcalaDollar(isPrivate) {
+  static Kusama(config, isPrivate) {
     return new AssetType(
-      9,
-      'Acala Dollar',
-      'aUSD',
-      Svgs.AusdIcon,
-      12,
-      new BN('10000000000'),
-      isPrivate
-    );
-  }
-
-  static Kusama(isPrivate) {
-    return new AssetType(
-      10,
+      getAssetIds(config).KSM,
       'Kusama',
       'KSM',
       Svgs.KusamaIcon,
       12,
       new BN('500000000'),
-      isPrivate
+      isPrivate,
+      'kusama'
     );
   }
 
-  static Rococo(isPrivate) {
+  static Rococo(config, isPrivate) {
     return new AssetType(
-      11,
+      getAssetIds(config).ROC,
       'Rococo',
       'ROC',
       Svgs.RocIcon,
       12,
       new BN('1'),
-      isPrivate
+      isPrivate,
+      'rococo'
     );
   }
 
-  static KintsugiBTC(isPrivate) {
+  static KintsugiBTC(config, isPrivate) {
     return new AssetType(
-      12,
+      getAssetIds(config).KBTC,
       'Kintsugi BTC',
       'kBTC',
       Svgs.KbtcIcon,
       8,
       new BN('1'),
-      isPrivate
+      isPrivate,
+      'bitcoin'
     );
   }
 
-  static Moonriver(isPrivate) {
+  static Moonriver(config, isPrivate) {
     return new AssetType(
-      13,
+      getAssetIds(config).MOVR,
       'Moonriver',
       'MOVR',
       Svgs.MovrIcon,
       18,
       new BN('10000000000000000'),
-      isPrivate
+      isPrivate,
+      'moonriver'
     );
   }
 
-  static AllCurrencies(isPrivate) {
-    return [
-      AssetType.Karura(isPrivate),
-      AssetType.AcalaDollar(isPrivate),
-      AssetType.Kusama(isPrivate),
-      AssetType.Rococo(isPrivate),
-      AssetType.KintsugiBTC(isPrivate),
-      AssetType.Moonriver(isPrivate),
-      AssetType.Dolphin(isPrivate)
-    ];
+  static AllCurrencies(config, isPrivate) {
+    if (config.NETWORK_NAME === NETWORK.DOLPHIN) {
+      return [
+        AssetType.DolphinSkinnedCalamari(config, isPrivate),
+        AssetType.Karura(config, isPrivate),
+        AssetType.Kusama(config, isPrivate),
+        AssetType.Moonriver(config, isPrivate)
+      ];
+    } else if (config.NETWORK_NAME === NETWORK.CALAMARI) {
+      return [
+        AssetType.Calamari(config, isPrivate),
+        AssetType.Karura(config, isPrivate),
+        AssetType.Kusama(config, isPrivate),
+        AssetType.Moonriver(config, isPrivate),
+      ];
+    }
   }
 
   static _getFullName(baseName, isPrivate) {
-    return isPrivate ? `Test Private ${baseName}` : `Test ${baseName}`;
+    return isPrivate ? `Test zk${baseName}` : `Test ${baseName}`;
   }
 
   static _getFullTicker(baseTicker, isPrivate) {
-    return isPrivate ? `p${baseTicker}` : baseTicker;
+    return isPrivate ? `zk${baseTicker}` : baseTicker;
   }
 
   toPrivate() {
@@ -161,7 +180,9 @@ export default class AssetType {
       this.numberOfDecimals,
       this.publicExistentialDeposit,
       true,
-      this.isNativeToken
+      this.coingeckoId,
+      this.isNativeToken,
+      this.logicalTicker
     );
   }
 
@@ -174,7 +195,9 @@ export default class AssetType {
       this.numberOfDecimals,
       this.publicExistentialDeposit,
       false,
-      this.isNativeToken
+      this.coingeckoId,
+      this.isNativeToken,
+      this.logicalTicker
     );
   }
 
@@ -185,4 +208,9 @@ export default class AssetType {
       return this.toPrivate();
     }
   }
+
+  canTransferXcm = (originChain, destinationChain) => {
+    return originChain.xcmAssets.find(asset => asset.name === this.name)
+      && destinationChain.xcmAssets.find(asset => asset.name === this.name);
+  };
 }

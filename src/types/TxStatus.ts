@@ -4,10 +4,10 @@ const FAILED = 'failed';
 const PROCESSING = 'processing';
 
 export default class TxStatus {
-  constructor(status, extrinsic = null, block = null, message = null) {
+  constructor(status, extrinsic = null, subscanUrl = null, message = null) {
     this.status = status;
     this.extrinsic = extrinsic;
-    this.block = block;
+    this.subscanUrl = subscanUrl;
     this.message = message;
     this.batchNum = null;
     this.totalBatches = null;
@@ -17,12 +17,13 @@ export default class TxStatus {
     return new TxStatus(PROCESSING, null, null, message);
   }
 
-  static finalized(extrinsic, block) {
-    return new TxStatus(FINALIZED, extrinsic, block, null);
+  // Block explorer URL provided only for transactions on non-manta chains
+  static finalized(extrinsic, subscanUrl = null) {
+    return new TxStatus(FINALIZED, extrinsic, subscanUrl);
   }
 
-  static failed(block, message) {
-    return new TxStatus(FAILED, null, block, message);
+  static failed() {
+    return new TxStatus(FAILED);
   }
 
   isProcessing() {
@@ -39,9 +40,6 @@ export default class TxStatus {
 
   toString() {
     let message = this.status;
-    if (this.block) {
-      message += `;\n block hash: ${this.block}`;
-    }
     if (this.message) {
       message += `;\n ${this.message}`;
     }

@@ -4,11 +4,14 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useRef,
+  useRef
 } from 'react';
 import PropTypes from 'prop-types';
-import { web3FromSource } from '@polkadot/extension-dapp';
-import { getLastAccessedExternalAccount, setLastAccessedExternalAccountAddress } from 'utils/persistence/externalAccountStorage';
+import { getWallets } from '@talismn/connect-wallets';
+import {
+  getLastAccessedExternalAccount,
+  setLastAccessedExternalAccountAddress
+} from 'utils/persistence/externalAccountStorage';
 import { useSubstrate } from './substrateContext';
 import { useKeyring } from './keyringContext';
 import { useConfig } from './configContext';
@@ -18,53 +21,143 @@ const ExternalAccountContext = createContext();
 export const ExternalAccountContextProvider = (props) => {
   const config = useConfig();
   const { api } = useSubstrate();
-  const { keyring } = useKeyring();
+  const { keyring, isKeyringInit, keyringAddresses } = useKeyring();
   const externalAccountRef = useRef(null);
   const [externalAccount, setExternalAccount] = useState(null);
   const [externalAccountSigner, setExternalAccountSigner] = useState(null);
+  const [extensionSigner, setExtensionSigner] = useState(null);
   const [externalAccountOptions, setExternalAccountOptions] = useState([]);
+  const [isInitialAccountSet, setIsInitialAccountSet] = useState(false);
+
+
+  const setApiSigner = (api) => {
+    api?.setSigner(null);
+    if (!externalAccount || !api) {
+      return;
+    }
+    const {
+      meta: { source, isInjected }
+    } = externalAccount;
+    const extensions = getWallets().filter((wallet) => wallet.extension);
+    const extensionNames = extensions.map((ext) => ext.extensionName);
+    if (isInjected && extensionNames.includes(source)) {
+      const selectedWallet = getWallets().find(
+        (wallet) => wallet.extensionName === source
+      );
+      setExtensionSigner(selectedWallet._signer);
+      api.setSigner(selectedWallet._signer);
+    }
+    const signer = externalAccount.meta.isInjected
+      ? externalAccount.address
+      : externalAccount;
+    setExternalAccountSigner(signer);
+  };
+
+  useEffect(() => {
+    const setSignerOnChangeExternalAccount = async () => {
+      setApiSigner(api);
+    };
+    setSignerOnChangeExternalAccount();
+  }, [api, externalAccount]);
+
+  const setStateWhenRemoveActiveExternalAccount = () => {
+    if (keyringAddresses.length > 0) {
+      // reset state if account(s) exist after disable selected external account
+      const externalAccountOptions = keyring.getPairs();
+      changeExternalAccountOptions(
+        externalAccountOptions[0],
+        externalAccountOptions
+      );
+    } else {
+      // reset state if no account exist after disable selected external account
+      changeExternalAccountOptions(null, []);
+      setExternalAccountSigner(null);
+      setExternalAccountOptions([]);
+    }
+  };
 
   useEffect(() => {
     const setInitialExternalAccount = async () => {
-      if (keyring && api && keyring.getPairs().length > 0) {
+      if (
+        !isInitialAccountSet &&
+        isKeyringInit &&
+        keyringAddresses.length > 0
+      ) {
+        const keyringExternalAccountOptions = keyring.getPairs();
+        if (keyringExternalAccountOptions.length === 0) {
+          return;
+        }
         // The user's default account is either their last accessed polkadot.js account,
         // or, as a fallback, the first account in their polkadot.js wallet
-        const externalAccountOptions =  keyring.getPairs();
-        let initialAccount = (
+        const initialAccount =
           getLastAccessedExternalAccount(config, keyring) ||
-          externalAccountOptions[0]
+          keyringExternalAccountOptions[0];
+        changeExternalAccountOptions(
+          initialAccount,
+          keyringExternalAccountOptions
         );
-        setExternalAccountOptions(externalAccountOptions);
-        changeExternalAccount(initialAccount);
+        setIsInitialAccountSet(true);
       }
     };
-    setInitialExternalAccount();
-  }, [keyring, api]);
+    if (!isInitialAccountSet) {
+      const interval = setInterval(async () => {
+        setInitialExternalAccount();
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isInitialAccountSet, isKeyringInit, keyringAddresses]);
 
   useEffect(() => {
-    if (!externalAccount || !api) return;
-    const setSignerOnChangeExternalAccount = async () => {
-      const {
-        meta: { source, isInjected },
-      } = externalAccount;
-      // signer is from Polkadot-js browser extension
-      if (isInjected) {
-        const injected = await web3FromSource(source);
-        api.setSigner(injected.signer);
+    const handleKeyringAddressesChange = () => {
+      if (!isInitialAccountSet || !api) {
+        return;
       }
-      const signer = externalAccount.meta.isInjected ? externalAccount.address : externalAccount;
-      setExternalAccountSigner(signer);
+      // ensure newly added account after removing all accounts can be updated
+      if (!externalAccount) {
+        const accounts = keyring.getPairs();
+        changeExternalAccountOptions(accounts[0], accounts);
+      } else if (!keyring.getAccount(externalAccount.address)) {
+        setStateWhenRemoveActiveExternalAccount();
+      } else {
+        setExternalAccountOptions(
+          orderExternalAccountOptions(externalAccount, keyring.getPairs() || [])
+        );
+      }
     };
-    setSignerOnChangeExternalAccount();
-  });
+    handleKeyringAddressesChange();
+  }, [isInitialAccountSet, keyringAddresses]);
+
+  // ensure externalAccount is the first item of externalAccountOptions
+  const orderExternalAccountOptions = (
+    selectedAccount,
+    externalAccountOptions
+  ) => {
+    const orderedExternalAccountOptions = [];
+    orderedExternalAccountOptions.push(selectedAccount);
+    externalAccountOptions.forEach((account) => {
+      if (account.address !== selectedAccount.address) {
+        orderedExternalAccountOptions.push(account);
+      }
+    });
+    return orderedExternalAccountOptions;
+  };
 
   const changeExternalAccount = async (account) => {
+    changeExternalAccountOptions(account, externalAccountOptions);
+    setLastAccessedExternalAccountAddress(config, account?.address);
+  };
+
+  const changeExternalAccountOptions = async (account, newExternalAccounts) => {
     setExternalAccount(account);
+    setExternalAccountOptions(
+      orderExternalAccountOptions(account, newExternalAccounts)
+    );
     externalAccountRef.current = account;
-    setLastAccessedExternalAccountAddress(config, account.address);
   };
 
   const value = {
+    setApiSigner,
+    extensionSigner,
     externalAccount,
     externalAccountRef,
     externalAccountSigner,
@@ -80,9 +173,9 @@ export const ExternalAccountContextProvider = (props) => {
 };
 
 ExternalAccountContextProvider.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.any
 };
 
 export const useExternalAccount = () => ({
-  ...useContext(ExternalAccountContext),
+  ...useContext(ExternalAccountContext)
 });

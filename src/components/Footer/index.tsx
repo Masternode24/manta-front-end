@@ -14,7 +14,7 @@ const CalamariFooter = () => {
   return (
     <div className="mt-16 flex justify-between gap-20 bg-primary py-10 px-28">
       <div>
-        <div className="text-2xl text-black dark:text-white">
+        <div className="text-2xl text-white">
           Calamari Network
         </div>
         <div className="my-6 text-xl text-secondary">
@@ -28,7 +28,7 @@ const CalamariFooter = () => {
           <HeartSvg className="mx-3 inline w-5 align-middle" />
           <span>by </span>
           <span
-            className="cursor-pointer text-black dark:text-white duration-200 hover:text-secondary dark:hover:text-secondary"
+            className="cursor-pointer text-white duration-200 hover:text-secondary dark:hover:text-secondary"
             onClick={() => window.open('https://p0xeidon.xyz/')}
           >
             &nbsp;P0xeidon Labs
@@ -46,7 +46,7 @@ const CalamariFooter = () => {
         >
           <FontAwesomeIcon
             icon={faTwitter}
-            className="w-6 duration-200 transform hover:scale-125 text-black dark:text-white text-xl"
+            className="w-6 duration-200 transform hover:scale-125 text-white text-xl"
           />
         </div>
         <div
@@ -55,7 +55,7 @@ const CalamariFooter = () => {
         >
           <FontAwesomeIcon
             icon={faDiscord}
-            className="w-6 duration-200 transform hover:scale-125 text-black dark:text-white text-xl"
+            className="w-6 duration-200 transform hover:scale-125 text-white text-xl"
           />
         </div>
         <div
@@ -64,7 +64,7 @@ const CalamariFooter = () => {
         >
           <FontAwesomeIcon
             icon={faTelegram}
-            className="w-6 duration-200 transform hover:scale-125 text-black dark:text-white text-xl"
+            className="w-6 duration-200 transform hover:scale-125 text-white text-xl"
           />
         </div>
         <div
@@ -73,7 +73,7 @@ const CalamariFooter = () => {
         >
           <FontAwesomeIcon
             icon={faMedium}
-            className="w-6 duration-200 transform hover:scale-125 text-black dark:text-white text-xl"
+            className="w-6 duration-200 transform hover:scale-125 text-white text-xl"
           />
         </div>
       </div>

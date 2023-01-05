@@ -4,3 +4,7 @@
     background-image: var(--gradient-button-primary);
     color: transparent;
 }
+
+.gradient-button {
+    background-image: var(--gradient-button-secondary);
+}

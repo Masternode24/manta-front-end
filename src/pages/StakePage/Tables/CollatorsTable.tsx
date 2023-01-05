@@ -139,31 +139,31 @@ const CollatorsTable = () => {
     },
     {
       field: 'Amount Staked',
-      width: 200,
+      width: 195,
       unSortIcon: true,
       headerTooltip: amountStakedTooltip,
       suppressMovable: true,
       cellRenderer: (params: any) => {
-        return params.data['Amount Staked'].toString(true, 0);
+        return params.data['Amount Staked'].toDisplayString(0);
       },
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) =>
         valueA.gt(valueB) ? 1 : -1
     },
     {
       field: 'Minimum Stake',
-      width: 200,
+      width: 195,
       unSortIcon: true,
       headerTooltip: minStakeTooltip,
       suppressMovable: true,
       cellRenderer: (params: any) => {
-        return params.data['Minimum Stake'].toString(true, 0);
+        return params.data['Minimum Stake'].toDisplayString(0);
       },
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) =>
         valueA.gt(valueB) ? 1 : -1
     },
     {
       field: 'APY Estimate',
-      width: 200,
+      width: 195,
       unSortIcon: true,
       headerTooltip: apyEstimateTooltip,
       suppressMovable: true,
@@ -177,7 +177,7 @@ const CollatorsTable = () => {
       field: 'Delegations',
       unSortIcon: true,
       headerTooltip: delegationTooltip,
-      width: 200,
+      width: 195,
       suppressMovable: true,
       cellRenderer: (params: any) => {
         return `${params.data['Delegations']} / 100`;
@@ -189,7 +189,7 @@ const CollatorsTable = () => {
       field: '',
       sortable: false,
       suppressMovable: true,
-      width: 210,
+      width: 215,
       cellRenderer: (params: any) => {
         const collator = params.data.data;
         const unstakeRequest = unstakeRequests.find(
@@ -237,7 +237,7 @@ const CollatorsTable = () => {
 
   return (
     <div className="mt-20 mx-auto sortable-table-wrapper" id="collatorsTable">
-      <h1 className="text-base font-semibold text-black dark:text-white flex items-end gap-10">
+      <h1 className="text-base font-semibold text-white flex items-end gap-10">
         Collators
       </h1>
       <div className="mt-6 flex gap-5">

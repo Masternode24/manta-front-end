@@ -3,6 +3,7 @@
 import Decimal from 'decimal.js';
 import * as axios from 'axios';
 import Balance from 'types/Balance';
+import Usd from 'types/Usd';
 import BN from 'bn.js';
 import Delegation from 'types/Delegation';
 import { MAX_DELEGATIONS, POINTS_PER_BLOCK, SECONDS_PER_BLOCK } from '../StakeConstants';
@@ -32,7 +33,7 @@ export const getAnnualInflation = async (api, config) => {
 
 // Gets active status for a list of collator addresses
 export const getCollatorsAreActive = async (api, collatorAddresses) => {
-  const activeCollators = await api.query.parachainStaking.selectedCandidates();
+  const activeCollators = (await api.query.parachainStaking.selectedCandidates()).map(collator => collator.toString());;
   return collatorAddresses.map(address => activeCollators.includes(address));
 };
 
@@ -83,7 +84,7 @@ export const getCalamariTokenValue = async () => {
   const res = await axios.get(
     'https://api.coingecko.com/api/v3/simple/price?ids=calamari-network&vs_currencies=usd'
   );
-  return new Decimal(res.data['calamari-network']['usd']);
+  return new Usd(new Decimal(res.data['calamari-network']['usd']));
 };
 
 // Gets the user's total rewards across all delegations for the past round

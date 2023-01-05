@@ -42,14 +42,14 @@ export const WithdrawModal = ({hideModal}) => {
     getErrorMessage();
   }, [selectedUnstakeRequest, userAvailableBalance]);
 
-  const withdrawAmountText = `Withdrawal amount: ${selectedUnstakeRequest.unstakeAmount.toString(true, 0)} `;
+  const withdrawAmountText = `Withdrawal amount: ${selectedUnstakeRequest.unstakeAmount.toDisplayString(0)} `;
   const notes = [
     'Withdrawn tokens are fully unstaked.',
     'You can transfer or stake withdrawn tokens without restriction.'
   ];
 
   return (
-    <div className="w-96 py-4 bg-secondary rounded-2xl">
+    <div className="w-96 py-4 bg-fifth rounded-2xl">
       <div className="flex items-center gap-2">
         <h1 className="font-semibold text-secondary text-lg">
           {selectedUnstakeRequest.collator.name}

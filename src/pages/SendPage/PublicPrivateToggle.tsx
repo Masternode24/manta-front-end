@@ -1,12 +1,11 @@
 // @ts-nocheck
+import React from 'react';
 import classNames from 'classnames';
 import { useTxStatus } from 'contexts/txStatusContext';
-import React from 'react';
 import PropTypes from 'prop-types';
-import { ReactComponent as SunIcon } from 'resources/icons/sun.svg';
-import { ReactComponent as ShieldIcon } from 'resources/icons/shield-lock.svg';
+import Svgs from 'resources/icons';
 
-const PublicPrivateToggle = ({ isPrivate, onToggle, label, prefix }) => {
+const PublicPrivateToggle = ({ isPrivate, onToggle, prefix }) => {
   const { txStatus } = useTxStatus();
   const disabled = txStatus?.isProcessing();
 
@@ -22,30 +21,37 @@ const PublicPrivateToggle = ({ isPrivate, onToggle, label, prefix }) => {
   }
 
   return (
-    <div className="flex justify-center items-center h-11">
-      <label className="text-primary">{label}</label>
-      <span
+    <>
+      <div
         id={buttonId}
         onClick={onClick}
         className={classNames(
-          'py-2 pr-1 cursor-pointer btn-hover unselectable-text',
-          'text-center rounded-full btn-primary flex items-center justify-center gap-1 w-28 text-white',
+          'flex text-center cursor-pointer place-items-center btn-hover unselectable-text',
+          'rounded-full bg-button-secondary text-white',
           { disabled: disabled }
         )}
       >
         {isPrivate ? (
-          <>
-            <ShieldIcon />
+          <div className="flex flex-row gap-2 w-24 justify-center items-center text-xss">
+            <img
+              className="w-3 h-3 place-self-center"
+              src={Svgs.LockIcon}
+              alt="icon"
+            />
             Private
-          </>
+          </div>
         ) : (
-          <>
-            <SunIcon />
+          <div className="flex flex-row gap-2 w-24 justify-center items-center text-xss">
+            <img
+              className="w-3 h-3 place-self-center"
+              src={Svgs.InternetIcon}
+              alt="icon"
+            />
             Public
-          </>
+          </div>
         )}
-      </span>
-    </div>
+      </div>
+    </>
   );
 };
 

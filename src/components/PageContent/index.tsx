@@ -7,7 +7,7 @@ const PageContent = ({ children, className }) => {
   return (
     <section
       className={classNames(
-        'page-content lg:flex flex-col flex-grow justify-top',
+        'page-content lg:flex flex-col flex-grow min-h-90  justify-top',
         className
       )}
     >

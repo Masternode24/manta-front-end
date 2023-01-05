@@ -1,0 +1,84 @@
+// @ts-nocheck
+import React, { useEffect } from 'react';
+import Navs from 'components/Navbar/Navs';
+import ChainSelect from 'pages/BridgePage/ChainSelect';
+import SendButton from 'pages/BridgePage/SendButton';
+import Svgs from 'resources/icons';
+import { useTxStatus } from 'contexts/txStatusContext';
+import { useKeyring } from 'contexts/keyringContext';
+import { useConfig } from 'contexts/configContext';
+import classNames from 'classnames';
+import { useBridgeData } from './BridgeContext/BridgeDataContext';
+import BridgeAssetSelect from './BridgeAssetSelect';
+import BridgeFeeDisplay from './BridgeFeeDisplay';
+import BridgeDestinationInput from './BridgeDestinationInput';
+
+const BridgeForm = () => {
+  const config = useConfig();
+  const { txStatus } = useTxStatus();
+  const disabled = txStatus?.isProcessing();
+  const { keyring } = useKeyring();
+  const {
+    originChain,
+    originChainOptions,
+    setOriginChain,
+    destinationChain,
+    destinationChainOptions,
+    setDestinationChain,
+    switchOriginAndDestination
+  } = useBridgeData();
+
+  useEffect(() => {
+    if (keyring) {
+      keyring.setSS58Format(config.SS58_FORMAT);
+    }
+  }, [keyring]);
+
+  const onClickSwitchOriginAndDestination = () => {
+    if (!disabled) {
+      switchOriginAndDestination();
+    }
+  };
+
+  const originChainIsEvm = originChain?.xcmAdapter.chain.type === 'ethereum';
+  const destinationChainIsEvm = destinationChain?.xcmAdapter.chain.type === 'ethereum';
+  const shouldShowDestinationInput = originChainIsEvm || destinationChainIsEvm;
+
+  return (
+    <div className="2xl:inset-x-0 justify-center min-h-full flex flex-col gap-6 items-center pb-2">
+      <Navs />
+      <div className="flex flex-col px-3 py-4 sm:p-8 bg-secondary rounded-lg gap-6">
+        <div className="flex gap-5 flex-row items-end">
+          <ChainSelect
+            chain={originChain}
+            chainOptions={originChainOptions}
+            setChain={setOriginChain}
+            isOriginChain={true}
+          />
+          <img
+            onClick={onClickSwitchOriginAndDestination}
+            className={classNames('mx-auto pb-7 cursor-pointer', {disabled: disabled})}
+            src={Svgs.LeftRightArrowIcon}
+            alt="switch-icon"
+          />
+          <ChainSelect
+            chain={destinationChain}
+            chainOptions={destinationChainOptions}
+            setChain={setDestinationChain}
+            isOriginChain={false}
+          />
+        </div>
+        <div className="flex flex-col flex-y gap-4">
+          <div>
+            <BridgeAssetSelect />
+          </div>
+        </div>
+        {shouldShowDestinationInput && <BridgeDestinationInput />}
+        <BridgeFeeDisplay />
+        <SendButton />
+      </div>
+    </div>
+  );
+};
+
+export default BridgeForm;

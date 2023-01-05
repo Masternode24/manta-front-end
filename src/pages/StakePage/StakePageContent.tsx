@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import { useTxStatus } from 'contexts/txStatusContext';
-import { showError, showInfo, showSuccess } from 'utils/ui/Notifications';
 import { useConfig } from 'contexts/configContext';
 import DowntimeModal from 'components/Modal/downtimeModal';
 import MobileNotSupportedModal from 'components/Modal/mobileNotSupported';
@@ -15,7 +13,6 @@ import CollatorsTable from './Tables/CollatorsTable';
 
 const StakePageContent = () => {
   const { keyring } = useKeyring();
-  const { txStatus } = useTxStatus();
   const config = useConfig();
   initAxios(config);
 
@@ -27,16 +24,6 @@ const StakePageContent = () => {
     }
   }, [keyring]);
 
-  useEffect(() => {
-    if (txStatus?.isFinalized()) {
-      showSuccess(config, 'Transaction succeeded', txStatus?.extrinsic);
-    } else if (txStatus?.isFailed()) {
-      showError('Transaction failed');
-    } else if (txStatus?.isProcessing()) {
-      showInfo(txStatus.message);
-    }
-  }, [txStatus]);
-
   let warningModal = <div />;
   if (config.DOWNTIME) {
     warningModal = <DowntimeModal />;
@@ -45,13 +32,15 @@ const StakePageContent = () => {
   }
 
   return (
-    <div className="self-center staking-table px-10 py-10">
-      {warningModal}
-      <AccountDisplay />
-      <StakingTable />
-      <UnstaktingTable />
-      <CollatorsTable />
-      <CalamariFooter />
+    <div className="flex flex-col gap-6 items-center">
+      <div className="mx-auto staking-table px-10 pt-2 pb-10 w-full">
+        {warningModal}
+        <AccountDisplay />
+        <StakingTable />
+        <UnstaktingTable />
+        <CollatorsTable />
+        <CalamariFooter />
+      </div>
     </div>
   );
 };

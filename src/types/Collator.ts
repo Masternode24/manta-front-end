@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import BN from 'bn.js';
-import Decimal from 'decimal.js';
 import { BASE_MIN_DELEGATION } from 'pages/StakePage/StakeConstants';
 import AssetType from './AssetType';
 import Balance from './Balance';

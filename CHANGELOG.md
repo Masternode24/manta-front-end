@@ -84,9 +84,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [3.1.1] - 2022-12-02
 
-### Changed
+### Added
 - [\#310](https://github.com/Manta-Network/manta-front-end/pull/310) Added name for a collator
 
-## [3.1.1] - 2022-12-15
+## [3.1.2] - 2022-12-15
 ### Changed
-- [\#331](https://github.com/Manta-Network/manta-front-end/pull/310) Added or changed names for several collators
+- [\#331](https://github.com/Manta-Network/manta-front-end/pull/331) Added or changed names for several collators
+
+## [4.0.0] - 2022-12-21
+### Added
+- [\#318](https://github.com/Manta-Network/manta-front-end/pull/318) Bridge page; support testnet v3 private payments
+- [\#304](https://github.com/Manta-Network/manta-front-end/pull/304) New public wallet connection workflow; support for Talisman, SubWallet, and Metamask (on bridge page only)
+- [\#242](https://github.com/Manta-Network/manta-front-end/pull/242) zkAccount display
+
+### Changed
+- [\#320](https://github.com/Manta-Network/manta-front-end/pull/320) UI redesign

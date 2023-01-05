@@ -16,8 +16,6 @@ import {
   faCircleQuestion,
   faEllipsis,
   faFaucetDrip,
-  faMoon,
-  faSun
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -57,7 +55,7 @@ const ChangeThemeMenuItem = ({theme, setTheme, name, icon}) => (
     </div>
     <FontAwesomeIcon
       icon={icon}
-      className="items-center w-4 h-5 text-xl text-black dark:text-white dark:hover:text-link"
+      className="items-center w-4 h-5 text-xl text-white dark:hover:text-link"
     />
   </div>
 );
@@ -86,8 +84,8 @@ const Menu = () => {
   };
 
   const DotMenuContent = () => (
-    <div className="w-48 h-68 flex-column flex-grow mt-3 bg-secondary rounded-3xl gap-y-4 p-5 absolute right-0 top-full z-50 border border-manta-gray">
-      {theme === themeType.Dark ? <ChangeThemeMenuItem theme={themeType.Light} setTheme={setTheme} name={'Light Mode'} icon={faSun} /> : <ChangeThemeMenuItem theme={themeType.Dark} setTheme={setTheme} name={'Dark Mode'} icon={faMoon} />}
+    <div className="w-48 h-68 flex-column flex-grow mt-3 bg-fifth rounded-3xl gap-y-4 p-5 absolute right-0 top-full z-50 border border-white border-opacity-20">
+      {/* {theme === themeType.Dark ? <ChangeThemeMenuItem theme={themeType.Light} setTheme={setTheme} name={'Light Mode'} icon={faSun} /> : <ChangeThemeMenuItem theme={themeType.Dark} setTheme={setTheme} name={'Dark Mode'} icon={faMoon} />} */}
       <MenuItem link={config.TWITTER_URL} name={'Twitter'} icon={faTwitter}/>
       <MenuItem link={links.DISCORD_URL} name={'Discord'} icon={faDiscord}/>
       <MenuItem link={links.TELEGRAM_URL} name={'Telegram'} icon={faTelegram}/>
@@ -104,17 +102,14 @@ const Menu = () => {
     <div className="relative">
       <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
         <div
-          className="hover:bg-manta-gray dark:hover:bg-blue-900 bg-secondary flex gap-3 px-4 p-3 font-black cursor-pointer rounded-xl"
+          className="bg-fifth flex gap-3 px-4 p-3 font-black border border-white border-opacity-20 cursor-pointer rounded-xl"
           onClick={() => {
             isOpen ? setIsOpen(false) : setIsOpen(true);
           }}
         >
-          <FontAwesomeIcon
-            icon={faEllipsis}
-            className="text-xl text-black dark:text-white"
-          />
+          <FontAwesomeIcon icon={faEllipsis} className="text-xl text-white" />
         </div>
-        {isOpen && <DotMenuContent/>}
+        {isOpen && <DotMenuContent />}
       </OutsideClickHandler>
     </div>
   );

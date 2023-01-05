@@ -48,21 +48,21 @@ export const StakeModal = ({ hideModal }) => {
     } else if (!balance) {
       return <DotLoader />;
     } else {
-      return balance.toString(true, 0);
+      return balance.toDisplayString(0);
     }
   };
 
   const availableBalanceText = `Available balance: ${getBalanceDisplayString(userAvailableBalance)}`;
-  const minStakeAmountString = selectedCollator.minStake.toString(true, 0);
+  const minStakeAmountString = selectedCollator.minStake.toDisplayString(0);
   const delegationAmountText = selectedCollatorDelegation
-    ? `Staked: ${selectedCollatorDelegation.delegatedBalance.toString(true, 0)}`
+    ? `Staked: ${selectedCollatorDelegation.delegatedBalance.toDisplayString(0)}`
     : 'Staked: 0 KMA';
 
   const minimumStakeText = ` Minimum stake: ${minStakeAmountString}`;
 
   const usdValueText =
     stakeTargetBalance && usdPerKma
-      ? stakeTargetBalance.toUsdString(usdPerKma)
+      ? stakeTargetBalance.toUsd(usdPerKma).toString()
       : '';
 
   const notes = [
@@ -134,12 +134,12 @@ export const StakeModal = ({ hideModal }) => {
   const onClickMax = async () => {
     const maxStakeableBalance = await getMaxStakeableBalance();
     if (maxStakeableBalance) {
-      onChangeStakeAmountInput(maxStakeableBalance.toString(false));
+      onChangeStakeAmountInput(maxStakeableBalance.toString());
     }
   };
 
   return (
-    <div className="w-96 py-4 bg-secondary rounded-2xl">
+    <div className="w-96 py-4 bg-fifth rounded-2xl">
       <div className="flex items-center gap-2">
         <h1 className="font-semibold text-secondary text-lg">
           {selectedCollator.name}
@@ -166,7 +166,7 @@ export const StakeModal = ({ hideModal }) => {
             alt="Calamari(KMA)"
           />
           <input
-            className="bg-secondary pl-1 flex-grow h-10 outline-none dark:text-white"
+            className="bg-fifth pl-1 flex-grow h-10 outline-none dark:text-white"
             placeholder="Amount"
             onChange={(e) => onChangeStakeAmountInput(e.target.value)}
             value={inputValue}
